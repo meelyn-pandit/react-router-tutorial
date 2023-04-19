@@ -81,9 +81,9 @@ export default function Root() {
           </li>
         </ul>
       </nav> */}
-      {/* </div>
+      </div>
       <div id="detail">
-        <Outlet /> */}
+        <Outlet />
       </div>
       </>
   )

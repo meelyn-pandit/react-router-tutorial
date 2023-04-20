@@ -118,7 +118,8 @@ export default function Root() {
           navigation.state === "loading" ? "loading" : ""
         }
       >
-        <Outlet />
+        <Outlet //renders the route in the same page 
+        /> 
       </div>
       </>
   )

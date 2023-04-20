@@ -12,6 +12,7 @@ import Root, {
 import ErrorPage from "./error-page"
 import Contact, {
   loader as contactLoader,
+  action as contactAction,
 } from "./routes/contact"
 import EditContact, {
   action as editAction
@@ -24,30 +25,37 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
     loader: rootLoader,
     action: rootAction,
-    children: [
-      { index: true,
-      element: <Index />
-      },
-      {
-        path:"contacts/:contactId",
-        element: <Contact />,
-        loader: contactLoader,
-      },
-      {
-        path: "contacts/:contactId/edit",
-        element: <EditContact />,
-        loader: contactLoader,
-        action: editAction,
-      },
-      {
-        path: "contacts/:contactId/destroy",
-        action: destroyAction,
-        errorElement: <div>Oops! There was an error.</div>
-      },
-    ],
+    errorElement: <ErrorPage />,
+    children: [ // creating pathless routes, participate in UI layout without requiring new path segements
+    // wrap the child routes in a pathless route
+          {
+            errorElement: <ErrorPage />,
+            children: [
+              { index: true, element: <Index /> },
+              {
+                path:"contacts/:contactId",
+                element: <Contact />,
+                loader: contactLoader,
+                action: contactAction, // calls the favorite action and all the data is revalidated automatically, no navigation, the url doesn't change, history stack is unaffected
+                // when any errors are thrown in the child routes, our new pathless route will catch it and ternder, preserving root route's ui
+                //basically renders error message in outlet rather than a new page
+              },
+              {
+                path: "contacts/:contactId/edit",
+                element: <EditContact />,
+                loader: contactLoader,
+                action: editAction,
+              },
+              {
+                path: "contacts/:contactId/destroy",
+                action: destroyAction,
+                errorElement: <div>Oops! There was an error.</div>
+              },
+        ],
+      }
+    ]
   },
   // {
   //   path: "contacts/:contactId",
